@@ -1,0 +1,36 @@
+Date : 2021-09-28 22:08:56
+Directory : d:\Revature\Training code\P0-Michael-Good\DL
+Total : 10 files,  500 codes, 56 comments, 84 blanks, all 640 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C#       |          9 |        481 |         56 |         79 |        616 |
+| XML      |          1 |         19 |          0 |          5 |         24 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                 | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                    |         10 |        500 |         56 |         84 |        640 |
+| Entities                                                             |          7 |        195 |          0 |         53 |        248 |
++----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                             | language | code       | comment    | blank      | total      |
++----------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| d:\Revature\Training code\P0-Michael-Good\DL\DBRepo.cs               | C#       |        266 |         56 |         23 |        345 |
+| d:\Revature\Training code\P0-Michael-Good\DL\DL.csproj               | XML      |         19 |          0 |          5 |         24 |
+| d:\Revature\Training code\P0-Michael-Good\DL\Entities\Customer.cs    | C#       |         17 |          0 |          5 |         22 |
+| d:\Revature\Training code\P0-Michael-Good\DL\Entities\IIDBContext.cs | C#       |         93 |          0 |         25 |        118 |
+| d:\Revature\Training code\P0-Michael-Good\DL\Entities\Inventory.cs   | C#       |         15 |          0 |          4 |         19 |
+| d:\Revature\Training code\P0-Michael-Good\DL\Entities\Order.cs       | C#       |         20 |          0 |          5 |         25 |
+| d:\Revature\Training code\P0-Michael-Good\DL\Entities\OrderLine.cs   | C#       |         15 |          0 |          4 |         19 |
+| d:\Revature\Training code\P0-Michael-Good\DL\Entities\Product.cs     | C#       |         19 |          0 |          5 |         24 |
+| d:\Revature\Training code\P0-Michael-Good\DL\Entities\StoreFront.cs  | C#       |         16 |          0 |          5 |         21 |
+| d:\Revature\Training code\P0-Michael-Good\DL\IRepo.cs                | C#       |         20 |          0 |          3 |         23 |
+| Total                                                                |          |        500 |         56 |         84 |        640 |
++----------------------------------------------------------------------+----------+------------+------------+------------+------------+
