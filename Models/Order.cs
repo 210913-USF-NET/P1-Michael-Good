@@ -14,6 +14,7 @@ namespace Models
             this.OrderItems = new List<OrderLine>();
         }
         public int Id{get;set;}
+        public int CustId { get; set; }
         public Customer Cust{get;set;}
         public List<OrderLine> OrderItems{get;set;}
         public decimal Total{get;set;}

@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DL.Migrations
 {
     [DbContext(typeof(IIDBContextW))]
-    [Migration("20210930191304_initial")]
+    [Migration("20211008023019_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,7 +71,7 @@ namespace DL.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int?>("CustId")
+                    b.Property<int>("CustId")
                         .HasColumnType("integer");
 
                     b.Property<string>("DateOfOrder")
@@ -100,7 +100,7 @@ namespace DL.Migrations
                     b.Property<int?>("ItemId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Quantity")
@@ -165,7 +165,9 @@ namespace DL.Migrations
                 {
                     b.HasOne("Models.Customer", "Cust")
                         .WithMany()
-                        .HasForeignKey("CustId");
+                        .HasForeignKey("CustId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Cust");
                 });
@@ -178,7 +180,9 @@ namespace DL.Migrations
 
                     b.HasOne("Models.Order", null)
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Item");
                 });

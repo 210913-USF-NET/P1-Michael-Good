@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
-using Model = Models;
-using Entity = DL.Entities;
+//using Model = Models;
+//using Entity = DL.Entities;
 using Microsoft.EntityFrameworkCore;
-using DL.Entities;
+//using DL.Entities;
 using Models;
 
 namespace DL
 {
     public class DBRepo : IRepo
     {
-        private Entity.IIDBContext _context;
-        public  DBRepo(Entity.IIDBContext context)
+        private IIDBContextW _context;
+        public  DBRepo(IIDBContextW context)
         {
             _context = context;
         }
@@ -20,28 +20,28 @@ namespace DL
         /// Gets all stores from database returns them in a list
         /// </summary>
         /// <returns> list of all stores from db </returns>
-        public List<Model.StoreFront> GetALLStoreFront()
+        public List<StoreFront> GetALLStoreFront()
         {
-            List<Model.StoreFront> sFronts = _context.StoreFronts.Select(StoreFront => new Model.StoreFront()
+            List<StoreFront> sFronts = _context.StoreFronts.Select(StoreFront => new StoreFront()
                 {
                     Id = StoreFront.Id,
                     Address = StoreFront.Address,
                     
                 }
             ).ToList();
-            foreach(Model.StoreFront s in sFronts)
+            foreach(StoreFront s in sFronts)
             {
-                List<Model.Inventory> inventories = _context.Inventories.Include("Product").Where(i => i.StoreFrontId == s.Id).Select(i => new Model.Inventory{
-                Id = i.Id,
-                Quantity = i.Quantity ?? 0,
-                Item = new Model.Product(){
-                    Id = i.Product.Id,
-                    Name = i.Product.Name,
-                    Price = i.Product.Price ?? 0
-                }
-                }).ToList();
+                //List<Inventory> inventories = _context.Inventories.Include("Product").Where(i => i.StoreFrontId == s.Id).Select(i => new Inventory{
+                //Id = i.Id,
+                //Quantity = i.Quantity ?? 0,
+                //Item = new Product(){
+                //    Id = i.Product.Id,
+                //    Name = i.Product.Name,
+                //    Price = i.Product.Price ?? 0
+                //}
+                //}).ToList();
 
-                s.Inventories = inventories;
+                //s.Inventories = inventories;
             }
             return sFronts;
         }
@@ -50,29 +50,29 @@ namespace DL
         /// Gets Store from database by Id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>Model.StoreFront with Id == id</returns>
-        public Model.StoreFront GetStoreFrontById(int id)
+        /// <returns>StoreFront with Id == id</returns>
+        public StoreFront GetStoreFrontById(int id)
         {
-            Entity.StoreFront StoreById = _context.StoreFronts.Include("Inventories").FirstOrDefault(s => s.Id == id);
+            StoreFront StoreById = _context.StoreFronts.Include("Inventories").FirstOrDefault(s => s.Id == id);
             if(StoreById == null)
             {
-                return new Model.StoreFront(){};
+                return new StoreFront(){};
             }
-            Model.StoreFront store = new Model.StoreFront(){
+            StoreFront store = new StoreFront(){
                 Id = StoreById.Id,
                 Address = StoreById.Address
             };
 
-            List<Model.Inventory> inventories = _context.Inventories.Include("Product").Where(i => i.StoreFrontId == StoreById.Id).Select(i => new Model.Inventory{
-            Id = i.Id,
-            Quantity = i.Quantity ?? 0,
-            Item = new Model.Product(){
-                    Id = i.Product.Id,
-                    Name = i.Product.Name,
-                    Price = i.Product.Price ?? 0
-                }
-            }).ToList();
-            store.Inventories = inventories;
+            //List<Inventory> inventories = _context.Inventories.Include("Product").Where(i => i.StoreFrontId == StoreById.Id).Select(i => new Inventory{
+            //Id = i.Id,
+            //Quantity = i.Quantity ?? 0,
+            //Item = new Product(){
+            //        Id = i.Product.Id,
+            //        Name = i.Product.Name,
+            //        Price = i.Product.Price ?? 0
+            //    }
+            //}).ToList();
+            //store.Inventories = inventories;
             return store;
 
         }
@@ -81,24 +81,24 @@ namespace DL
         /// sends order to db then sets up all orderlines related to order
         /// </summary>
         /// <param name="order"></param>
-        public void SendOrder(Model.Order order)
+        public void SendOrder(Order order)
         {
-            Entity.Order orderSend = new Entity.Order(){
-                CustomerId = order.Cust.Id,
+            Order orderSend = new Order(){
+                //CustomerId = order.Cust.Id,
                 StoreAddress = order.StoreAddress,
                 Total = order.Total,
-                Date = order.DateOfOrder
+                //Date = order.DateOfOrder
             };
             _context.Add(orderSend);
             _context.SaveChanges();
             _context.ChangeTracker.Clear();
-            foreach(Model.OrderLine ol in order.OrderItems)
+            foreach(OrderLine ol in order.OrderItems)
             {
-                Entity.OrderLine orderLineSend = new Entity.OrderLine(){
+                OrderLine orderLineSend = new OrderLine(){
                     Id = ol.Id,
                     Quantity = ol.Quantity,
-                    ProductId = ol.Item.Id,
-                    OrderId = orderSend.Id
+                    //ProductId = ol.Item.Id,
+                    //OrderId = orderSend.Id
                 };
                 _context.Add(orderLineSend);
                 _context.SaveChanges();
@@ -110,9 +110,9 @@ namespace DL
         /// adds new customer to db 
         /// </summary>
         /// <param name="customer"></param>
-        public void AddNewCustomer(Model.Customer customer)
+        public void AddNewCustomer(Customer customer)
         {
-            Entity.Customer customerAdd = new Entity.Customer(){
+            Customer customerAdd = new Customer(){
                 Name = customer.Name,
                 PhoneNum = customer.PhoneNum
             };
@@ -126,10 +126,10 @@ namespace DL
         /// </summary>
         /// <param name="id"></param>
         /// <returns> returns customer with id</returns>
-        public Model.Customer GetCustomerById(int id)
+        public Customer GetCustomerById(int id)
         {
-            Entity.Customer customerById = _context.Customers.FirstOrDefault(c => c.Id == id);
-            return new Model.Customer(){
+            Customer customerById = _context.Customers.FirstOrDefault(c => c.Id == id);
+            return new Customer(){
                 Id = customerById.Id,
                 Name = customerById.Name,
                 PhoneNum = customerById.PhoneNum
@@ -141,15 +141,15 @@ namespace DL
         /// </summary>
         /// <param name="phoneNum"></param>
         /// <returns> returns customer with given phonenum or default</returns>
-        public Model.Customer GetCustomerByPhone(long phoneNum)
+        public Customer GetCustomerByPhone(long phoneNum)
         {
-            Entity.Customer customerById = _context.Customers.FirstOrDefault(c => c.PhoneNum == phoneNum);
+            Customer customerById = _context.Customers.FirstOrDefault(c => c.PhoneNum == phoneNum);
             if(customerById == null)
             {
-                return new Model.Customer(){};
+                return new Customer(){};
             }
             
-            return new Model.Customer(){
+            return new Customer(){
                 Id = customerById.Id,
                 Name = customerById.Name,
                 PhoneNum = customerById.PhoneNum
@@ -160,9 +160,9 @@ namespace DL
         /// adds new store and then adds inventories from all products
         /// </summary>
         /// <param name="store"></param>
-        public void AddNewStoreFront(Model.StoreFront store)
+        public void AddNewStoreFront(StoreFront store)
         {
-            Entity.StoreFront storeAdd = new Entity.StoreFront(){
+            StoreFront storeAdd = new StoreFront(){
                 Address = store.Address
             };
             _context.Add(storeAdd);
@@ -171,10 +171,10 @@ namespace DL
 
             for(int i = 1; i <= 4; i++)
             {
-                Entity.Inventory inventoryAdd = new Entity.Inventory(){
+                Inventory inventoryAdd = new Inventory(){
                     Quantity = 0,
-                    ProductId = i,
-                    StoreFrontId = storeAdd.Id
+                    //ProductId = i,
+                    //StoreFrontId = storeAdd.Id
                 };
                 _context.Add(inventoryAdd);
             }
@@ -187,13 +187,13 @@ namespace DL
         /// </summary>
         /// <param name="inventory"></param>
         /// <param name="storeId"></param>
-        public void UpdateInventory(Model.Inventory inventory, int storeId)
+        public void UpdateInventory(Inventory inventory, int storeId)
         {
-            Entity.Inventory inventoryUpdate = new Entity.Inventory(){
+            Inventory inventoryUpdate = new Inventory(){
                 Id  = inventory.Id,
-                ProductId = inventory.Item.Id,
-                StoreFrontId = storeId,
-                Quantity = inventory.Quantity
+                //ProductId = inventory.Item.Id,
+                //StoreFrontId = storeId,
+                //Quantity = inventory.Quantity
             };
             _context.Update(inventoryUpdate);
             _context.SaveChanges();
@@ -205,33 +205,34 @@ namespace DL
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns> returns list of order sorted by date</returns>
-        public List<Model.Order> GetAllOrdersByCustomerByDate(int customerId)
+        public List<Order> GetAllOrdersByCustomerByDate(int customerId)
         {
-            List<Model.Order> orders = _context.Orders.Include("Customer").Where(Order => Order.CustomerId == customerId).OrderBy(Order => Order.Date).Select(Order => new Model.Order{
-                Id = Order.Id,
-                Cust = new Model.Customer(){
-                    Id = Order.Customer.Id,
-                    Name = Order.Customer.Name,
-                    PhoneNum = Order.Customer.PhoneNum
-                },
-                StoreAddress = Order.StoreAddress,
-                Total = Order.Total ?? 0,
-                DateOfOrder = Order.Date
-            }).ToList();
-            foreach(Model.Order o in orders)
-            {
-                List<Model.OrderLine> orderLines = _context.OrderLines.Include("Product").Where(ol => ol.OrderId == o.Id).Select(i => new Model.OrderLine{
-                Id = i.Id,
-                Quantity = i.Quantity ?? 0,
-                Item = new Model.Product(){
-                    Id = i.Product.Id,
-                    Name = i.Product.Name,
-                    Price = i.Product.Price ?? 0
-                }
-                }).ToList();
+            //List<Order> orders = _context.Orders.Include("Customer").Where(Order => Order.CustomerId == customerId).OrderBy(Order => Order.Date).Select(Order => new Order{
+            //    Id = Order.Id,
+            //    Cust = new Customer(){
+            //        Id = Order.Customer.Id,
+            //        Name = Order.Customer.Name,
+            //        PhoneNum = Order.Customer.PhoneNum
+            //    },
+            //    StoreAddress = Order.StoreAddress,
+            //    Total = Order.Total ?? 0,
+            //    DateOfOrder = Order.Date
+            //}).ToList();
+            //foreach(Order o in orders)
+            //{
+            //    List<OrderLine> orderLines = _context.OrderLines.Include("Product").Where(ol => ol.OrderId == o.Id).Select(i => new OrderLine{
+            //    Id = i.Id,
+            //    Quantity = i.Quantity ?? 0,
+            //    Item = new Product(){
+            //        Id = i.Product.Id,
+            //        Name = i.Product.Name,
+            //        Price = i.Product.Price ?? 0
+            //    }
+            //    }).ToList();
 
-                o.OrderItems = orderLines;
-            }
+            //    o.OrderItems = orderLines;
+            //}
+            List<Order> orders = new List<Order>();
             return orders;
         }
 
@@ -240,33 +241,35 @@ namespace DL
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns> returns list of order sorted by total</returns>
-        public List<Model.Order> GetAllOrdersByCustomerByCost(int customerId)
+        public List<Order> GetAllOrdersByCustomerByCost(int customerId)
         {
-            List<Model.Order> orders = _context.Orders.Include("Customer").Where(Order => Order.CustomerId == customerId).OrderBy(Order => Order.Total).Select(Order => new Model.Order{
-                Id = Order.Id,
-                Cust = new Model.Customer(){
-                    Id = Order.Customer.Id,
-                    Name = Order.Customer.Name,
-                    PhoneNum = Order.Customer.PhoneNum
-                },
-                StoreAddress = Order.StoreAddress,
-                Total = Order.Total ?? 0,
-                DateOfOrder = Order.Date
-            }).ToList();
-            foreach(Model.Order o in orders)
-            {
-                List<Model.OrderLine> orderLines = _context.OrderLines.Include("Product").Where(ol => ol.OrderId == o.Id).Select(i => new Model.OrderLine{
-                Id = i.Id,
-                Quantity = i.Quantity ?? 0,
-                Item = new Model.Product(){
-                    Id = i.Product.Id,
-                    Name = i.Product.Name,
-                    Price = i.Product.Price ?? 0
-                }
-                }).ToList();
+            //List<Order> orders = _context.Orders.Include("Customer").Where(Order => Order.CustomerId == customerId).OrderBy(Order => Order.Total).Select(Order => new Order{
+            //    Id = Order.Id,
+            //    Cust = new Customer(){
+            //        Id = Order.Customer.Id,
+            //        Name = Order.Customer.Name,
+            //        PhoneNum = Order.Customer.PhoneNum
+            //    },
+            //    StoreAddress = Order.StoreAddress,
+            //    Total = Order.Total ?? 0,
+            //    DateOfOrder = Order.Date
+            //}).ToList();
+            //foreach(Order o in orders)
+            //{
+            //    List<OrderLine> orderLines = _context.OrderLines.Include("Product").Where(ol => ol.OrderId == o.Id).Select(i => new OrderLine{
+            //    Id = i.Id,
+            //    Quantity = i.Quantity ?? 0,
+            //    Item = new Product(){
+            //        Id = i.Product.Id,
+            //        Name = i.Product.Name,
+            //        Price = i.Product.Price ?? 0
+            //    }
+            //    }).ToList();
 
-                o.OrderItems = orderLines;
-            }
+            //    o.OrderItems = orderLines;
+            //}
+            //List<Order> orders = new List<Order>();
+            List<Order> orders = new List<Order>();
             return orders;
         }
 
@@ -275,33 +278,34 @@ namespace DL
         /// </summary>
         /// <param name="storeAddress"></param>
         /// <returns>returns list of order sorted by date</returns>
-        public List<Model.Order> GetAllOrdersByStoreByDate(string storeAddress)
+        public List<Order> GetAllOrdersByStoreByDate(string storeAddress)
         {
-            List<Model.Order> orders = _context.Orders.Include("Customer").Where(Order => Order.StoreAddress == storeAddress).OrderBy(Order => Order.Date).Select(Order => new Model.Order{
-                Id = Order.Id,
-                Cust = new Model.Customer(){
-                    Id = Order.Customer.Id,
-                    Name = Order.Customer.Name,
-                    PhoneNum = Order.Customer.PhoneNum
-                },
-                StoreAddress = Order.StoreAddress,
-                Total = Order.Total ?? 0,
-                DateOfOrder = Order.Date
-            }).ToList();
-            foreach(Model.Order o in orders)
-            {
-                List<Model.OrderLine> orderLines = _context.OrderLines.Include("Product").Where(ol => ol.OrderId == o.Id).Select(i => new Model.OrderLine{
-                Id = i.Id,
-                Quantity = i.Quantity ?? 0,
-                Item = new Model.Product(){
-                    Id = i.Product.Id,
-                    Name = i.Product.Name,
-                    Price = i.Product.Price ?? 0
-                }
-                }).ToList();
+            //List<Order> orders = _context.Orders.Include("Customer").Where(Order => Order.StoreAddress == storeAddress).OrderBy(Order => Order.Date).Select(Order => new Order{
+            //    Id = Order.Id,
+            //    Cust = new Customer(){
+            //        Id = Order.Customer.Id,
+            //        Name = Order.Customer.Name,
+            //        PhoneNum = Order.Customer.PhoneNum
+            //    },
+            //    StoreAddress = Order.StoreAddress,
+            //    Total = Order.Total ?? 0,
+            //    DateOfOrder = Order.Date
+            //}).ToList();
+            //foreach(Order o in orders)
+            //{
+            //    List<OrderLine> orderLines = _context.OrderLines.Include("Product").Where(ol => ol.OrderId == o.Id).Select(i => new OrderLine{
+            //    Id = i.Id,
+            //    Quantity = i.Quantity ?? 0,
+            //    Item = new Product(){
+            //        Id = i.Product.Id,
+            //        Name = i.Product.Name,
+            //        Price = i.Product.Price ?? 0
+            //    }
+            //    }).ToList();
 
-                o.OrderItems = orderLines;
-            }
+            //    o.OrderItems = orderLines;
+            //}
+            List<Order> orders = new List<Order>();
             return orders;
         }
 
@@ -310,32 +314,32 @@ namespace DL
         /// </summary>
         /// <param name="storeAddress"></param>
         /// <returns>returns list of order sorted by total</returns>
-        public List<Model.Order> GetAllOrdersByStoreByCost(string storeAddress)
+        public List<Order> GetAllOrdersByStoreByCost(string storeAddress)
         {
-            List<Model.Order> orders = _context.Orders.Include("Customer").Where(Order => Order.StoreAddress == storeAddress).OrderBy(Order => Order.Total).Select(Order => new Model.Order{
+            List<Order> orders = _context.Orders.Include("Customer").Where(Order => Order.StoreAddress == storeAddress).OrderBy(Order => Order.Total).Select(Order => new Order{
                 Id = Order.Id,
-                Cust = new Model.Customer(){
-                    Id = Order.Customer.Id,
-                    Name = Order.Customer.Name,
-                    PhoneNum = Order.Customer.PhoneNum
+                Cust = new Customer(){
+                    //Id = Order.Customer.Id,
+                    //Name = Order.Customer.Name,
+                    //PhoneNum = Order.Customer.PhoneNum
                 },
                 StoreAddress = Order.StoreAddress,
-                Total = Order.Total ?? 0,
-                DateOfOrder = Order.Date
+                //Total = Order.Total ?? 0,
+                //DateOfOrder = Order.Date
             }).ToList();
-            foreach(Model.Order o in orders)
+            foreach(Order o in orders)
             {
-                List<Model.OrderLine> orderLines = _context.OrderLines.Include("Product").Where(ol => ol.OrderId == o.Id).Select(i => new Model.OrderLine{
-                Id = i.Id,
-                Quantity = i.Quantity ?? 0,
-                Item = new Model.Product(){
-                    Id = i.Product.Id,
-                    Name = i.Product.Name,
-                    Price = i.Product.Price ?? 0
-                }
-                }).ToList();
+                //List<OrderLine> orderLines = _context.OrderLines.Include("Product").Where(ol => ol.OrderId == o.Id).Select(i => new OrderLine{
+                //Id = i.Id,
+                //Quantity = i.Quantity ?? 0,
+                //Item = new Product(){
+                //    Id = i.Product.Id,
+                //    Name = i.Product.Name,
+                //    Price = i.Product.Price ?? 0
+                //}
+                //}).ToList();
 
-                o.OrderItems = orderLines;
+                //o.OrderItems = orderLines;
             }
             return orders;
         }

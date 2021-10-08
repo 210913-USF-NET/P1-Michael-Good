@@ -11,7 +11,6 @@ namespace DL.Migrations
     [DbContext(typeof(IIDBContextW))]
     partial class IIDBContextWModelSnapshot : ModelSnapshot
     {
-        
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -70,7 +69,7 @@ namespace DL.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int?>("CustId")
+                    b.Property<int>("CustId")
                         .HasColumnType("integer");
 
                     b.Property<string>("DateOfOrder")
@@ -99,7 +98,7 @@ namespace DL.Migrations
                     b.Property<int?>("ItemId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Quantity")
@@ -164,7 +163,9 @@ namespace DL.Migrations
                 {
                     b.HasOne("Models.Customer", "Cust")
                         .WithMany()
-                        .HasForeignKey("CustId");
+                        .HasForeignKey("CustId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Cust");
                 });
@@ -177,7 +178,9 @@ namespace DL.Migrations
 
                     b.HasOne("Models.Order", null)
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Item");
                 });

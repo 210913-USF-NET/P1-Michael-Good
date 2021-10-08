@@ -11,6 +11,7 @@ namespace Models
             this.Quantity = quantity;
         }
         public int Id{get;set;}
+        public int StoreFrontId { get; set; }
         public Product Item{get;set;}
         public int Quantity{get;set;}
         

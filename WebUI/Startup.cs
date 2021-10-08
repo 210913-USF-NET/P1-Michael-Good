@@ -28,6 +28,8 @@ namespace WebUI
         {
             services.AddControllersWithViews();
             services.AddDbContext<IIDBContextW>(options => options.UseNpgsql(Configuration.GetConnectionString("IIDB")));
+            services.AddScoped<IRepo, DBRepo>();
+            services.AddScoped<IBL, BL>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
