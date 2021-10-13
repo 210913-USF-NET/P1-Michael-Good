@@ -34,20 +34,12 @@ namespace WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(StoreFront store)
         {
-            try
-            {
                 if(ModelState.IsValid)
                 {
                     _bl.AddNewStoreFront(store);
-                    return RedirectToAction(nameof(Index));
-                }
-                return View();
+                    return RedirectToAction("Menu", "Admin");
             }
-            catch
-            {
-                return RedirectToAction(nameof(Index));
                 return View();
-            }
         }
 
         // GET: StoreFrontController/Edit/5

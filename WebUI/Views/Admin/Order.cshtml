@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewData["Title"] = "Search Order";
+}
+
+<h1>Search Orders</h1>
+
+<form asp-action="Search">
+    <h4>Customer(ID) Orders by Price</h4>
+    <input type="number" name=cp>
+    <input type="submit" value="Search" />
+</form>
+<form asp-action="Search">
+    <h4>Customer(ID) Orders by Date</h4>
+    <input type="number" name=cd>
+    <input type="submit" value="Search" />
+</form>
+<form asp-action="Search">
+    <h4>Store(Address) Orders by Price</h4>
+    <input type="text" name=sp>
+    <input type="submit" value="Search" />
+</form>
+<form asp-action="Search">
+    <h4>Store(Address) Orders by Date</h4>
+    <input type="text" name=sd>
+    <input type="submit" value="Search" />
+</form>

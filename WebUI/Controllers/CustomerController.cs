@@ -4,15 +4,39 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using StoreBL;
+using Models;
+
 
 namespace WebUI.Controllers
 {
     public class CustomerController : Controller
     {
+        private IBL _bl;
+        public CustomerController(IBL bl)
+        {
+            _bl = bl;
+        }
         // GET: CustomerController
         public ActionResult Index()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(Customer cust)
+        {
+            cust = _bl.GetCustomerByPhone(cust.PhoneNum);
+            if (cust.Id == 0)
+            {
+                return View();
+            }
+            else
+            {
+                Response.Cookies.Append("CurrentUserId", cust.Id.ToString());
+                return RedirectToAction("Index", "Order");
+            }
         }
 
         // GET: CustomerController/Details/5
@@ -30,58 +54,22 @@ namespace WebUI.Controllers
         // POST: CustomerController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Customer cust)
         {
-            try
+            Customer temp = _bl.GetCustomerByPhone(cust.PhoneNum);
+            if(temp.Id == 0)
             {
-                return RedirectToAction(nameof(Index));
+                _bl.AddNewCustomer(cust);
+                cust = _bl.GetCustomerByPhone(cust.PhoneNum);
+                Response.Cookies.Append("CurrentUserId", cust.Id.ToString());
+                return RedirectToAction("Index", "Order");
             }
-            catch
+            else
             {
                 return View();
             }
         }
 
-        // GET: CustomerController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: CustomerController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: CustomerController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CustomerController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        
     }
 }

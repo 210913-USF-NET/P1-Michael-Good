@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewData["Title"] = "Admin Menu";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Admin Menu</h1>
+    <p>Please select one of the following</p>
+
+    <a class="nav-link" asp-area="" asp-controller="StoreFront" asp-action="Create">Create a Store</a>
+    <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Refill">Restock Store</a>
+    <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Order">View Orders</a>
+</div>

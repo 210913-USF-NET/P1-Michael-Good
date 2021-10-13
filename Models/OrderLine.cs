@@ -10,6 +10,7 @@ namespace Models
             this.Quantity = quantity;
         }
         public int Id{get;set;}
+        public int ItemId { get; set; }
         public int OrderId { get; set; }
         public Product Item{get;set;}
         public int Quantity{get;set;}
